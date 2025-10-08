@@ -10,6 +10,7 @@ import { Astloch } from 'next/font/google'
 
 const UserButton = async () => {
   const session = await auth()
+  console.log("Session from user-button file", session)
 
   if(!session) {
     return (
@@ -20,13 +21,14 @@ const UserButton = async () => {
       </Button>
     )
   }
+  const userImg = session.user?.image;
   const firstInit = session.user?.name?.charAt(0).toUpperCase() ?? 'U';
   return (
     <div className='flex gap-2 items-center'>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex items-center">
-            <Button variant='ghost' className='relative w-8 h-8 rounded-full ml-2 flex items-center justify-center bg-gray-200'>{firstInit}</Button>
+            <Button variant='ghost' className='relative w-8 h-8 rounded-full ml-2 flex items-center justify-center bg-gray-200'>{userImg ? <img className='min-w-8 h-8 block' src={userImg} alt="user image" />  : firstInit}</Button>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className='w-56' align='end' forceMount>

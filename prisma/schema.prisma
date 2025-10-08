@@ -41,6 +41,8 @@ model User {
   role          String    @default("user")
   address       Json?     @db.Json
   paymentMethod String?
+  provider      String?  
+  providerId    String?
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
   updatedAt     DateTime  @updatedAt
   account       Account[]

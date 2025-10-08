@@ -10,8 +10,9 @@ import { Metadata } from 'next'
 import React from 'react'
 import Image from 'next/image'
 import CredentialSignInForm from './credentials-signinform'
-import { auth } from '@/auth'
+import { auth, signIn } from '@/auth'
 import { redirect } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 
 
 export const metadata:Metadata = {
@@ -55,7 +56,16 @@ const SignInPage = async (props:{
 
       </Card>
 
-
+      <form
+        action={async () => {
+          "use server"
+          await signIn("google")
+        }}
+      >
+        <div className="flex justify-center mt-11">
+          <Button className='cursor-pointer hover:text-black hover:bg-white border border-black  transition-all duration-300 mx-auto'>Signin with Google</Button>
+        </div>
+      </form>
 
 
 

@@ -6,8 +6,7 @@ export default function RootLayout({
 }>) {
   return (
     <div className="flex min-h-screen flex-center w-full flex-col">
-
-{children}
+      {children}
     </div>
   );
 }
