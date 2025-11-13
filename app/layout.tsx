@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { APP_NAME, APP_DESCRIPTION } from "@/lib/constants";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({
   subsets:['latin'],
@@ -33,8 +34,10 @@ export default function RootLayout({
         className={`font-inter antialiased`}
       >
         <ThemeProvider attribute='class' defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+          <Toaster position="top-right" closeButton richColors   />
           {children}
         </ThemeProvider>
+        
       </body>
     </html>
   );

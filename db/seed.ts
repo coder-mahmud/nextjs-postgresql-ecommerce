@@ -18,3 +18,5 @@ async function main(){
 }
 
 main()
+
+// npx tsx ./db/seed

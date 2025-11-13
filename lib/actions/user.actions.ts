@@ -18,7 +18,7 @@ export async function signInWithCredentirals(prevState: unknown, formData: FormD
     });
 
     const signin = await signIn('credentials', user)
-    console.log("signin",signin)
+    console.log("signin response on server action file:",signin)
     return {success: true, message:"Signed in successfully"}
   } catch (err) {
     if(isRedirectError(err)){

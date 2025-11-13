@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import { insertProductSchema } from '@/lib/validators'
+import { insertProductSchema, cartItemSchema, inserCartSchema } from '@/lib/validators'
 import { Decimal } from "@prisma/client/runtime/library";
 
 export type Product =  z.infer<typeof insertProductSchema> & {
@@ -7,4 +7,10 @@ export type Product =  z.infer<typeof insertProductSchema> & {
   rating:string;
   createdAt:string;
   numReviews: number;
-}
+};
+
+export type Cart  = z.infer<typeof inserCartSchema>;
+export type CartItem  = z.infer<typeof cartItemSchema>;
+
+
+
