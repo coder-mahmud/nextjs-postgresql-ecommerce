@@ -20,8 +20,8 @@ const AddToCart = ({item}: {item:CartItem}) => {
   const handleAddToCart = async () => {
     const res = await addItemToCart(item)
 
-    if(!res.success){
-     return toast.error(res.message)
+    if(!res?.success){
+     return toast.error(res?.message)
     }
 
     // toast.success(res.message)

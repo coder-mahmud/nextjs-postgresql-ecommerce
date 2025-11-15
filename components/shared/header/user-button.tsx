@@ -11,7 +11,7 @@ import { Astloch } from 'next/font/google'
 
 const UserButton = async () => {
   const session = await auth()
-  console.log("Session from user-button file", session)
+  // console.log("Session from user-button file", session)
 
   if(!session) {
     return (
