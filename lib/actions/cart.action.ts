@@ -13,7 +13,7 @@ import { Prisma } from "@prisma/client"
 //Calculart cart prices
 const calcPrice = (items: CartItem[]) => {
   const itemsPrice =  round2(
-    items.reduce((acc,item) => (acc + +item.price) * item.qty ,0)
+    items.reduce((acc,item) => (acc + Number(item.price) * item.qty )  ,0)
   );
 
   const shippingPrice = round2(itemsPrice > 100 ? 0 : 10 );
