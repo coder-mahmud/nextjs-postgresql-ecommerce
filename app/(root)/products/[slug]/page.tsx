@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { formatNumberWithDecimal } from '@/lib/utils'
 import ProductImages from '@/components/shared/product/product-images'
 import AddToCart from '@/components/shared/product/add-to-cart'
-
+import { getMyCart } from '@/lib/actions/cart.action'
 
 
 
@@ -18,6 +18,9 @@ const ProductPage = async (props:{params:Promise<{slug:string}>}) => {
   if(!prismaProduct) notFound()
   const product = mapProduct(prismaProduct)
 // console.log("mappedProd",mappedProd)
+
+  const cart = await getMyCart();
+
   return (
     <>
       <section>
@@ -61,7 +64,9 @@ const ProductPage = async (props:{params:Promise<{slug:string}>}) => {
                 {product.stock > 0 && (
                   <div className="flex flex-center">
                     {/* <Button className='w-full'>Add to cart</Button> */}
-                    <AddToCart item={{
+                    <AddToCart 
+                    cart ={cart}
+                    item={{
                       productId:product.id,
                       name: product.name,
                       slug: product.slug,

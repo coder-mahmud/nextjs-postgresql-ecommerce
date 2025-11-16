@@ -60,7 +60,7 @@ export async function addItemToCart(data:CartItem){
     }
 
     if(!cart){
-      console.log("Cart not found!")
+      console.log("Cart not found and creating one!")
       const newCart = inserCartSchema.parse({
         userId:userId,
         items:[item],
@@ -98,7 +98,7 @@ export async function addItemToCart(data:CartItem){
         let foundItem = (cart.items as CartItem[]).find((x) => x.productId === item.productId );
         foundItem!.qty = existItem.qty + 1
 
-        console.log("Cart", cart)
+        // console.log("Cart", cart)
 
       }else{
         //Check stock
@@ -153,11 +153,23 @@ export async function getMyCart(){
 
   //get cart from db 
   const cart = await prisma.cart.findFirst({
-    where: userId ?  {userId:userId} : {sessionCartId:sessionCartId}
+    where: {sessionCartId:sessionCartId}
   });
   
   if(!cart){
     return undefined
+  }
+
+  console.log("Cart:",cart)
+  if(userId && !cart.userId){
+    // console.log("Cart userid not set yet")
+    // user exists but cart does not have added one yet.
+    await prisma.cart.update({
+      where:{id: cart.id},
+      data:{
+        userId: userId
+      }
+    })
   }
 
   return convertToPlainObject({
@@ -171,4 +183,56 @@ export async function getMyCart(){
 
   })
 
+}
+
+
+export async function removeItemFromCart(productId : string){
+  try {
+
+    const sessionCartId = (await cookies()).get('sessionCartId')?.value
+    if(!sessionCartId){
+      throw new Error('Cart session not found!')
+    }
+  
+    // Get Prduct from db
+    const product = await prisma.product.findFirst({
+      where:{id: productId}
+    })
+
+    if(!product) throw new Error("Product not found!")
+    
+    // GET user cart
+    const cart = await getMyCart();
+    if(!cart) throw new Error("Cart not found!")
+
+    // Check for item
+    const exist = (cart.items as CartItem[]).find(item => item.productId === productId)
+    const preserved = structuredClone(exist);
+    if(!exist) throw new Error("Item not found!")
+
+    // Check if only 1 in aty
+
+    if(exist.qty === 1){
+      cart.items = (cart.items as CartItem[]).filter(item => item.productId !== exist.productId)
+    }else{
+      //Decrease qty
+      (cart.items as CartItem[]).find(item => item.productId === productId)!.qty = exist.qty - 1
+    }
+
+    //Update cart in db
+    await prisma.cart.update({
+      where:{id: cart.id},
+      data:{
+        items: cart.items,
+        ...calcPrice(cart.items as CartItem[])
+      }
+    })
+
+    revalidatePath((`/products/${product.slug}`))
+
+    return {success: true, message: preserved!.qty === 1 ? `${product.name} was removed from cart` :  `${product.name} was updated in cart`}
+
+  } catch (error : any) {
+    return {success: false, message: error.message}
+  }
 }
